@@ -5,6 +5,7 @@ namespace App\Livewire\Todo;
 use App\Livewire\Forms\TodoForm;
 use App\Models\Todo;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -36,6 +37,8 @@ class TodoIndex extends Component
 
             $this->form->reset();
             $this->getToDos();
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('ToDoの登録に失敗しました: ' . $e->getMessage(), ['exception' => $e]);
             $this->addError('todo-error', 'ToDoの登録ができませんでした。');
@@ -62,6 +65,8 @@ class TodoIndex extends Component
             $this->form->update();
             $this->form->reset();
             $this->getToDos();
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             $id = $this->form->id;
             Log::error("ToDo(ID:{$id})更新に失敗しました: " . $e->getMessage(), ['exception' => $e]);
@@ -75,6 +80,8 @@ class TodoIndex extends Component
             $this->form->delete($id);
             $this->form->reset();
             $this->getToDos();
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error("ToDo(ID:{$id})の削除に失敗しました: " . $e->getMessage(), ['exception' => $e]);
             $this->addError('todo-error', 'ToDoの削除ができませんでした。');
@@ -87,6 +94,8 @@ class TodoIndex extends Component
             $this->form->complete($id);
             $this->form->reset();
             $this->getToDos();
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error("ToDo(ID:{$id})の完了処理に失敗しました: " . $e->getMessage(), ['exception' => $e]);
             $this->addError('todo-error', 'ToDoを完了にできませんでした。');
@@ -99,6 +108,8 @@ class TodoIndex extends Component
             $this->form->reStore($id);
             $this->form->reset();
             $this->getToDos();
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error("ToDo(ID:{$id})の復元処理に失敗しました: " . $e->getMessage(), ['exception' => $e]);
             $this->addError('todo-error', 'ToDoを未完了に戻せませんでした。');
