@@ -19,6 +19,7 @@
     @endif
 
     @stack('styles')
+    @livewireStyles
 </head>
 <body>
     {{ $slot }}
@@ -28,7 +29,7 @@
     @else
 
     @endif
-
+    @livewireScriptConfig
     @stack('scripts')
 </body>
 
