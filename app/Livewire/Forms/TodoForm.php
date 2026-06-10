@@ -10,6 +10,7 @@ class TodoForm extends Form
 {
     public ?int $id = null;
     #[Validate] public string $title = '';
+    #[Validate] public string $editTitle = '';
     #[Validate] public string $description = '';
     public int $completed = 0;
 
@@ -20,16 +21,63 @@ class TodoForm extends Form
             'title'       => ['required', 'string', 'min:3', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'completed'   => ['required', 'integer', 'in:0,1'],
+            'editTitle'   => ['required_with:id', 'string', 'min:3', 'max:255'],
         ];
     }
 
-    public function createOrUpdateTask()
+    public function validationAttributes(): array
     {
-        $this->validate(); 
+        return [
+            'title'       => 'ToDo名',
+            'editTitle'   => '変更後のToDo名',
+        ];
+    }
 
-        Todo::updateOrCreate(
-            ['id' => $this->id],
+    public function messages(): array
+    {
+        return [
+            'editTitle.required_with' => '変更後のToDo名は必須項目です。',
+        ];
+    }
+
+    public function create()
+    {
+        $this->validate();
+
+        Todo::create(
             $this->except(['id'])
         );
+    }
+
+    public function update()
+    {
+        $this->validate([
+            'id' => $this->rules()['id'],
+            'editTitle' => $this->rules()['editTitle'],
+        ]);
+
+        $this->title = $this->editTitle; 
+
+        Todo::find($this->id)->update(
+            $this->except(['id'])
+        );
+    }
+
+    public function delete(int $id): int
+    {
+        $this->validate(['id' => $this->rules()['id']]);
+        return Todo::find($id)->delete();
+    }
+
+    public function complete(int $id): int
+    {
+        $this->validate(['id' => $this->rules()['id']]);
+        return Todo::find($id)->update(['completed' => TODO::STATUS_COMPLETED]);
+    }
+
+    public function reStore(int $id): int
+    {
+        $this->validate(['id' => $this->rules()['id']]);
+        return Todo::find($id)->update(['completed' => TODO::STATUS_NOT_COMPLETED]);
     }
 }
