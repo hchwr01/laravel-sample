@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Todo extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     const STATUS_COMPLETED = 1;
     const STATUS_NOT_COMPLETED = 0;
