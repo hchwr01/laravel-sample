@@ -24,7 +24,5 @@ class AppServiceProvider extends ServiceProvider
         Livewire::setUpdateRoute(function ($handle) {
             return Route::post('/laravel/livewire/update', $handle);
         });
-
-        Livewire::setAssetUrl('/laravel');
     }
 }
