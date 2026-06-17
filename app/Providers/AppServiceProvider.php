@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
