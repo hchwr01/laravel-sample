@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Livewire::setUpdateRoute(function ($handle, $path) {
-            return Route::post('/laravel' . $path, $handle);
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/laravel/livewire-update', $handle);
         });
     }
 }
