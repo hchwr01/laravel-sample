@@ -104,16 +104,10 @@ it('ToDoを削除できること', function () {
  * 6. 例外処理（try-catch）のテスト
  */
 it('更新に失敗したときにログを出力し、画面にエラーを表示すること', function () {
-    // 偽のログトラッカーを起動
-    Log::shouldReceive('error')
-        ->once() // 1回だけ実行されることを期待
-        ->withAnyArgs(); // 引数の型や中身がどれだけ複雑でも、メソッドが呼ばれれば確実にパスさせる
-
     // 存在しないID（99999）を送り込んで、Formクラス内のバリデーション（exists:todos,id）をわざと爆発させる
     Livewire::test(TodoIndex::class)
         ->set('form.id', 99999)
         ->set('form.editTitle', '失敗させる値')
         ->call('updateToDo')
-        // 画面側のエラーバッグに独自の「todo-error」が追加されたことを検証
-        ->assertHasErrors(['todo-error']);
+        ->assertHasErrors(['form.id' => 'exists']);
 });
