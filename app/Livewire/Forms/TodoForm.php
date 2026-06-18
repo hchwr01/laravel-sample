@@ -42,7 +42,11 @@ class TodoForm extends Form
 
     public function create()
     {
-        $this->validate();
+        $this->validate([
+            'title'       => $this->rules()['title'],
+            'description' => $this->rules()['description'],
+            'completed'   => $this->rules()['completed'],
+        ]);
 
         Todo::create(
             $this->except(['id'])
@@ -52,11 +56,11 @@ class TodoForm extends Form
     public function update()
     {
         $this->validate([
-            'id' => $this->rules()['id'],
+            'id'        => ['required', 'integer', 'exists:todos,id'],
             'editTitle' => $this->rules()['editTitle'],
         ]);
 
-        $this->title = $this->editTitle; 
+        $this->title = $this->editTitle;
 
         Todo::find($this->id)->update(
             $this->except(['id'])
@@ -65,19 +69,31 @@ class TodoForm extends Form
 
     public function delete(int $id): int
     {
-        $this->validate(['id' => $this->rules()['id']]);
+        $this->id = $id;
+        $this->validate([
+            'id' => ['required', 'integer', 'exists:todos,id']
+        ]);
+
         return Todo::find($id)->delete();
     }
 
     public function complete(int $id): int
     {
-        $this->validate(['id' => $this->rules()['id']]);
+        $this->id = $id;
+        $this->validate([
+            'id' => ['required', 'integer', 'exists:todos,id']
+        ]);
+
         return Todo::find($id)->update(['completed' => TODO::STATUS_COMPLETED]);
     }
 
     public function reStore(int $id): int
     {
-        $this->validate(['id' => $this->rules()['id']]);
+        $this->id = $id;
+        $this->validate([
+            'id' => ['required', 'integer', 'exists:todos,id']
+        ]);
+
         return Todo::find($id)->update(['completed' => TODO::STATUS_NOT_COMPLETED]);
     }
 }
